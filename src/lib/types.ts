@@ -13,6 +13,7 @@ export interface HierarchyItem {
   id: HierarchyRole;
   title: string;
   description: string;
+  goal?: string;
 }
 
 export interface UserDetails {
