@@ -1,11 +1,22 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React from "react";
+import HierarchySelection from "@/components/HierarchySelection";
+
+const Index: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen py-12 px-4 sm:px-6 mx-auto max-w-5xl">
+      <div className="text-center mb-12 space-y-2 animate-slide-down">
+        <div className="hero-chip mb-2">Hierarchy Explorer</div>
+        <h1 className="text-4xl font-bold tracking-tight">Select Your Role</h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Choose your position in the organization hierarchy to begin the tailored survey experience.
+        </p>
+      </div>
+      
+      <HierarchySelection />
+      
+      <div className="mt-16 text-center text-sm text-muted-foreground animate-fade-in">
+        <p>Your responses will help us understand organizational dynamics across different levels.</p>
       </div>
     </div>
   );
