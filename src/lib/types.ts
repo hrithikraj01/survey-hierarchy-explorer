@@ -20,6 +20,7 @@ export interface UserDetails {
   fullName: string;
   companyName: string;
   jobTitle: string;
+  email: string; // Added email field
   role: HierarchyRole;
 }
 

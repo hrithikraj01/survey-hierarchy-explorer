@@ -21,6 +21,7 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ role }) => {
     fullName: "",
     companyName: "",
     jobTitle: "",
+    email: "", // Added email field with empty initial value
     role: role
   });
   
@@ -39,8 +40,16 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ role }) => {
     setIsSubmitting(true);
     
     // Validate form
-    if (!userDetails.fullName || !userDetails.companyName || !userDetails.jobTitle) {
+    if (!userDetails.fullName || !userDetails.companyName || !userDetails.jobTitle || !userDetails.email) {
       toast.error("Please fill out all fields");
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userDetails.email)) {
+      toast.error("Please enter a valid email address");
       setIsSubmitting(false);
       return;
     }
@@ -102,6 +111,20 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ role }) => {
             name="jobTitle"
             placeholder={roleData?.title || "Your position"}
             value={userDetails.jobTitle}
+            onChange={handleInputChange}
+            className="bg-white/50"
+            required
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="email">Email Address</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="your.email@example.com"
+            value={userDetails.email}
             onChange={handleInputChange}
             className="bg-white/50"
             required
