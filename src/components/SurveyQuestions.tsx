@@ -72,19 +72,20 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({ role }) => {
   const handleSubmitSurvey = async () => {
     setIsSubmitting(true);
     
-    // Prepare data for submission to Supabase
-    const submissionData = {
-      user_id: null, // Anonymous submission
-      user_details: userDetails,
-      role: role,
-      responses: userResponses
-    };
-    
     try {
+      // Prepare data for submission to Supabase
+      // Make sure the data structure matches what Supabase expects
+      const submissionData = {
+        user_id: null, // Anonymous submission
+        user_details: userDetails as any, // Type cast to match Json
+        role: role,
+        responses: userResponses as any // Type cast to match Json
+      };
+      
       // Submit to Supabase
       const { error } = await supabase
         .from('survey_responses')
-        .insert([submissionData]);
+        .insert(submissionData);
       
       if (error) {
         console.error("Error submitting survey:", error);
