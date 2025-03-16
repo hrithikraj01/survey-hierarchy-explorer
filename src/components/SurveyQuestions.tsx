@@ -7,6 +7,7 @@ import { getQuestionsForRole } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, XCircle, ArrowLeft, ArrowRight, Send } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SurveyQuestionsProps {
   role: string;
@@ -68,27 +69,42 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({ role }) => {
     }
   };
   
-  const handleSubmitSurvey = () => {
+  const handleSubmitSurvey = async () => {
     setIsSubmitting(true);
     
-    // Prepare data for submission (would be sent to Supabase in real implementation)
+    // Prepare data for submission to Supabase
     const submissionData = {
-      userDetails,
+      user_id: null, // Anonymous submission
+      user_details: userDetails,
+      role: role,
       responses: userResponses
     };
     
-    console.log("Survey submission data:", submissionData);
-    
-    // Simulate API call
-    setTimeout(() => {
-      toast.success("Survey submitted successfully!");
-      setIsSubmitting(false);
+    try {
+      // Submit to Supabase
+      const { error } = await supabase
+        .from('survey_responses')
+        .insert([submissionData]);
       
-      // In a real app, we would redirect to a success page
-      // For now, just go back to the home page
+      if (error) {
+        console.error("Error submitting survey:", error);
+        toast.error("Failed to submit survey. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+      
+      toast.success("Survey submitted successfully!");
+      
+      // Clean up local storage
       localStorage.removeItem("userDetails");
+      
+      // Redirect to home page
       navigate("/");
-    }, 1000);
+    } catch (error) {
+      console.error("Error in survey submission:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+      setIsSubmitting(false);
+    }
   };
 
   if (!isLoaded || questions.length === 0) {
